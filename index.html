@@ -100,6 +100,11 @@
       display: block;
     }
 
+    /* Oculto por defecto, visible solo en modo editor */
+    #edit-btn, #edit-panel {
+      display: none;
+    }
+
     #edit-panel {
       position: fixed;
       top: 20px;
@@ -108,7 +113,6 @@
       border-radius: 20px;
       padding: 15px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      display: none;
       width: 350px;
       z-index: 1000;
       color: #333; /* texto oscuro en el panel */
@@ -154,6 +158,36 @@
     button:hover {
       background-color: #3d85c6;
     }
+
+    /* Botones secretos para activar/desactivar modo editor */
+    #activar-editor {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #6fa8dc;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1002;
+      color: white;
+      user-select: none;
+    }
+
+    #desactivar-editor {
+      position: fixed;
+      bottom: 60px;
+      left: 20px;
+      background-color: #e06666;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1003;
+      color: white;
+      user-select: none;
+      display: none;
+    }
   </style>
   <script>
     function togglePopup(elementId) {
@@ -167,6 +201,31 @@
           if (el.id !== elementId) el.style.display = "none";
         });
       }
+    }
+
+    // Mostrar botones segun estado guardado
+    window.onload = function () {
+      if (localStorage.getItem("modoEditor") === "true") {
+        document.getElementById("edit-btn").style.display = "block";
+        document.getElementById("edit-panel").style.display = "none";
+        document.getElementById("activar-editor").style.display = "none";
+        document.getElementById("desactivar-editor").style.display = "block";
+      } else {
+        document.getElementById("edit-btn").style.display = "none";
+        document.getElementById("edit-panel").style.display = "none";
+        document.getElementById("activar-editor").style.display = "block";
+        document.getElementById("desactivar-editor").style.display = "none";
+      }
+    };
+
+    function activarModoEditor() {
+      localStorage.setItem("modoEditor", "true");
+      location.reload();
+    }
+
+    function desactivarModoEditor() {
+      localStorage.removeItem("modoEditor");
+      location.reload();
     }
 
     function toggleEditPanel() {
@@ -327,6 +386,10 @@
     </div>
   </div>
 
+  <!-- Botones secretos para activar/desactivar modo editor -->
+  <div id="activar-editor" onclick="activarModoEditor()">Activar modo editor</div>
+  <div id="desactivar-editor" onclick="desactivarModoEditor()">Desactivar modo editor</div>
+
   <!-- Botón para activar el panel -->
   <div id="edit-btn" onclick="toggleEditPanel()">✏️ Editar contenido</div>
 
@@ -346,6 +409,5 @@
     <input type="file" id="nueva-imagen" accept="image/*" />
     <button onclick="actualizarContenido()">Actualizar contenido</button>
   </div>
-
 </body>
 </html>
